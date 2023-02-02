@@ -1,3 +1,3 @@
-import startServer from "./start-server";
+import Server from "./server";
 
-startServer();
+Server();

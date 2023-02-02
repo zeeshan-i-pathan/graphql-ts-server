@@ -1,11 +1,15 @@
 import { ResolverMap } from "./types/resolvermap";
-import { GQL } from "./types/graphql";
-
+import { User } from "./entity/User";
+import { GQL } from './types/graphql';
 const resolvers: ResolverMap = {
     Mutation: {
-        register: (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
-            console.log(email, password)
-            return true
+        register: async (_, { email, password }: GQL.IRegisterOnMutationArguments) => {
+            let user = await User.findOneBy({email})
+            if (!user) {
+                User.create({email, password}).save();
+                return null
+            }
+            return [{path: "email", message: "Already Registered!"}];
         }
     },
     Query: {
