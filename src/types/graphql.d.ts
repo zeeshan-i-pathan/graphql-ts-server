@@ -23,6 +23,33 @@ column: number;
 interface IQuery {
 __typename: "Query";
 hello: string | null;
+getQuotation: IQuotation | null;
+}
+
+interface IQuotation {
+__typename: "Quotation";
+proposers: Array<IUser> | null;
+insureds: Array<IUser> | null;
+plans: Array<IPlan | null> | null;
+}
+
+interface IUser {
+__typename: "User";
+name: string;
+age: number;
+email: string;
+gender: Gender | null;
+}
+
+const enum Gender {
+M = 'M',
+F = 'F'
+}
+
+interface IPlan {
+__typename: "Plan";
+sumAssured: number;
+annualPrem: number;
 }
 
 interface IMutation {

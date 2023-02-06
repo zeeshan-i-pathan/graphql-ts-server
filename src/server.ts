@@ -1,14 +1,20 @@
 import { createSchema, createYoga } from "graphql-yoga";
 import { createServer } from "http";
-import resolvers from "./resolvers";
-
 import { loadSchemaSync } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
+import * as fs from 'fs';
 import { AppDataSource } from "./data-source";
+import { ResolverMap } from "./types/resolvermap";
 
 const Server = async () => {
   await AppDataSource.initialize();
+  const folders = fs.readdirSync(join(__dirname, "./modules"));
+  const resolvers: ResolverMap[] = []
+  folders.forEach(folder => {
+    const { resolver } = require(`./modules/${folder}/resolver`);
+    resolvers.push(resolver);
+  })
   const schema = loadSchemaSync(join(__dirname, "./schema.graphql"), {
     loaders: [new GraphQLFileLoader()],
   });
