@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 let email = faker.internet.email();
 let password = faker.internet.password();
-let query = gql`
+let query = (email: string, password: string) => gql`
   mutation {
     register(email: "${email}", password: "${password}") {
       path
@@ -32,12 +32,28 @@ let query = gql`
 
 describe("Register User Test", () => {
   it("should make a request and succeed and make another request and fail", async () => {
-    let response = await request(url, query);
+    // Register a new email once
+    let response = await request(url, query(email, password));
+    // This should be able to succeed
     expect(response.register).toBeNull();
-    let user = await User.findOneBy({ email });
+    let user = await User.findOne({where: {email}, select: ['password']});
     expect(user).not.toBeNull();
+    // The password should not match as the password should be encrypted in the database
     expect(user?.password).not.toEqual(password);
-    response = await request(url, query);
-    expect(response.register[0].message).toBe('Already Registered!');
+    // Try to Register with the same email again
+    response = await request(url, query(email, password));
+    // This should fail with an error message
+    expect(response.register.length).toBe(1);
+    expect(response.register[0].path).toBe('email');
   });
+
+  it("should check for valid email", async () => {
+    // Register with invalid email
+    let response = await request(url, query("ab", password));
+    // It should throw two errors
+    expect(response.register.length).toBe(2);
+    // And both the errors should be related to email;
+    expect(response.register[0]?.path).toBe("email");
+    expect(response.register[1]?.path).toBe("email");
+  })
 });

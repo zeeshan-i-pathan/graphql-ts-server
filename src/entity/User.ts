@@ -14,7 +14,7 @@ export class User extends BaseEntity {
 
     @BeforeInsert()
     bcryptPasssword() {
-        let hashedPassword = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10));
+        let hashedPassword = bcrypt.hashSync(this.password, 10);
         this.password = hashedPassword;
     }
 }

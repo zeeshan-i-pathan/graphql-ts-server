@@ -16,8 +16,8 @@ export type Scalars = {
 
 export type Error = {
   __typename?: 'Error';
-  message?: Maybe<Scalars['String']>;
-  path?: Maybe<Scalars['String']>;
+  message: Scalars['String'];
+  path: Scalars['String'];
 };
 
 export type Mutation = {
@@ -122,8 +122,8 @@ export type ResolversParentTypes = {
 };
 
 export type ErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']> = {
-  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  path?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
