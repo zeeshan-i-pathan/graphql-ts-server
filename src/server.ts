@@ -5,12 +5,12 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 import * as fs from 'fs';
 import { AppDataSource } from "./data-source";
-import { ResolverMap } from "./types/resolvermap";
+import { Resolvers } from './types/resolver-types'
 
 const Server = async () => {
   await AppDataSource.initialize();
   const folders = fs.readdirSync(join(__dirname, "./modules"));
-  const resolvers: ResolverMap[] = []
+  const resolvers: Resolvers[] = []
   folders.forEach(folder => {
     const { resolver } = require(`./modules/${folder}/resolver`);
     resolvers.push(resolver);
